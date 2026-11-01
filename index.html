@@ -113,5 +113,78 @@ c.style.display=c.textContent.toLowerCase().includes(q)?'block':'none';
 });
 }
 </script>
+<section id="english-fonts">
+<h2>✨ English Stylish Fonts</h2>
+<input type="text" id="fontInput" placeholder="Enter Your Name..." oninput="generateFonts()">
+<div id="fontResults"></div>
+</section>
+
+<style>
+#english-fonts {
+  background:#101827;
+  color:white;
+  padding:20px;
+  border-radius:15px;
+  margin:20px 0;
+}
+#fontInput {
+  width:90%;
+  padding:14px;
+  border-radius:10px;
+  font-size:18px;
+}
+.font-card {
+  background:#202d42;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
+  overflow-wrap:anywhere;
+}
+.font-card button {
+  background:#00cba9;
+  border:0;
+  padding:8px 15px;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
+
+<script>
+const styles = [
+  ["𝐁𝐨𝐥𝐝", "bold"],
+  ["𝑰𝒕𝒂𝒍𝒊𝒄", "italic"],
+  ["𝓢𝓬𝓻𝓲𝓹𝓽", "script"],
+  ["𝔊𝔬𝔱𝔥𝔦𝔠", "gothic"],
+  ["𝕯𝖔𝖚𝖇𝖑𝖊", "double"],
+  ["𝙈𝙤𝙣𝙤", "mono"],
+  ["Ｓｐａｃｅ", "wide"],
+  ["ⓑⓤⓑⓑⓛⓔ", "circle"]
+];
+
+function convert(text, type) {
+  const maps = {
+    bold: 0x1D400, italic: 0x1D434,
+    script: 0x1D4D0, gothic: 0x1D504,
+    double: 0x1D538, mono: 0x1D670
+  };
+  if(type === "wide") return text.replace(/[!-~]/g,c=>String.fromCharCode(c.charCodeAt(0)+0xFEE0));
+  if(type === "circle") return text.toLowerCase().replace(/[a-z]/g,c=>String.fromCodePoint(0x24D0+c.charCodeAt(0)-97));
+  return [...text].map(c=>{
+    let n=c.charCodeAt(0);
+    if(n>=65 && n<=90) return String.fromCodePoint((maps[type]||0x1D400)+n-65);
+    if(n>=97 && n<=122) return String.fromCodePoint((maps[type]||0x1D400)+26+n-97);
+    return c;
+  }).join("");
+}
+
+function generateFonts() {
+  const text = document.getElementById("fontInput").value || "HASSAN";
+  document.getElementById("fontResults").innerHTML = styles.map(([name,type])=>{
+    let result = convert(text,type);
+    return `<div class="font-card"><b>${name}</b><p>${result}</p><button onclick="navigator.clipboard.writeText('${result.replace(/'/g,"\\'")}')">Copy</button></div>`;
+  }).join("");
+}
+generateFonts();
+</script>
 </body>
 </html>
