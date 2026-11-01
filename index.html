@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRO TOOLS X</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:white;font-family:Arial}
+header{text-align:center;padding:30px;background:#151d35}
+header h1{color:#43d9ff;font-size:34px}
+header p{color:#ccc}
+.container{max-width:1000px;margin:auto;padding:20px}
+.search,input,textarea{width:100%;padding:14px;border:0;border-radius:9px;margin:10px 0;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px}
+.card,.panel{background:#182442;padding:20px;border-radius:14px;margin-bottom:15px}
+.card{text-align:center;border:1px solid #304365}
+.card h3{color:#43d9ff}
+button{background:#16bde7;color:#07111e;padding:11px 16px;border:0;border-radius:8px;font-weight:bold;cursor:pointer}
+.output{background:#0b1020;padding:13px;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>⚡ PRO TOOLS X</h1>
+<p>All Your Useful Tools in One Place</p>
+</header>
+<div class="container">
+<input class="search" id="search" placeholder="Search tools..." oninput="filterTools()">
+<h2>🚀 Our Tools</h2>
+<div class="grid" id="tools">
+<div class="card"><h3>Stylish Fonts</h3><p>Fancy text generator</p><button onclick="show('fonts')">Open</button></div>
+<div class="card"><h3>Urdu Fonts</h3><p>Urdu text styles</p><button onclick="show('urdu')">Open</button></div>
+<div class="card"><h3>QR Code</h3><p>Create QR codes</p><button onclick="show('qr')">Open</button></div>
+<div class="card"><h3>Calculator</h3><p>Quick calculations</p><button onclick="show('calc')">Open</button></div>
+<div class="card"><h3>Word Counter</h3><p>Count words</p><button onclick="show('words')">Open</button></div>
+<div class="card"><h3>Password Generator</h3><p>Generate passwords</p><button onclick="show('pass')">Open</button></div>
+</div>
+<div class="panel" id="panel">
+<h2>Welcome to PRO TOOLS X</h2>
+<p>Select any tool above to get started.</p>
+</div>
+</div>
+<footer>© 2026 PRO TOOLS X</footer>
+<script>
+function show(type){
+let p=document.getElementById('panel');
+if(type==='fonts'||type==='urdu'){
+p.innerHTML='<h2>Stylish Text Generator</h2><input id="txt" placeholder="Write your name or text"><button onclick="makeFonts()">Generate</button><div id="results"></div>';
+}
+if(type==='qr'){
+p.innerHTML='<h2>QR Code Generator</h2><input id="qrtext" placeholder="Enter text or link"><button onclick="makeQR()">Create QR</button><div id="result"></div>';
+}
+if(type==='calc'){
+p.innerHTML='<h2>Calculator</h2><input id="expression" placeholder="Example: 25+30*2"><button onclick="calculate()">Calculate</button><div id="result"></div>';
+}
+if(type==='words'){
+p.innerHTML='<h2>Word Counter</h2><textarea id="wordtext" placeholder="Write something"></textarea><button onclick="countWords()">Count</button><div id="result"></div>';
+}
+if(type==='pass'){
+p.innerHTML='<h2>Password Generator</h2><button onclick="makePass()">Generate</button><div id="result"></div>';
+}
+}
+function makeFonts(){
+let t=document.getElementById('txt').value;
+let styles=[
+s=>'『'+s+'』',
+s=>'꧁'+s+'꧂',
+s=>'★ '+s+' ★',
+s=>'♡ '+s+' ♡',
+s=>'【'+s+'】',
+s=>'༺'+s+'༻'
+];
+document.getElementById('results').innerHTML=styles.map(s=>'<div class="output">'+escapeHTML(s(t))+' <button onclick="copyText(this)">Copy</button></div>').join('');
+}
+function escapeHTML(s){
+return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function copyText(btn){
+let t=btn.parentElement.firstChild.textContent;
+navigator.clipboard.writeText(t);
+btn.textContent='Copied!';
+}
+function makeQR(){
+let t=document.getElementById('qrtext').value;
+if(!t)return;
+document.getElementById('result').innerHTML='<img alt="QR Code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(t)+'">';
+}
+function calculate(){
+try{
+let e=document.getElementById('expression').value;
+if(!/^[0-9+\-*/(). %]+$/.test(e))throw Error();
+document.getElementById('result').textContent='Answer: '+Function('"use strict";return ('+e+')')();
+}catch{
+document.getElementById('result').textContent='Invalid calculation';
+}
+}
+function countWords(){
+let t=document.getElementById('wordtext').value;
+document.getElementById('result').textContent='Words: '+(t.trim()?t.trim().split(/\s+/).length:0)+' | Characters: '+t.length;
+}
+function makePass(){
+let a='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+let p=Array.from({length:16},()=>a[Math.floor(Math.random()*a.length)]).join('');
+document.getElementById('result').innerHTML=escapeHTML(p);
+}
+function filterTools(){
+let q=document.getElementById('search').value.toLowerCase();
+document.querySelectorAll('.card').forEach(c=>{
+c.style.display=c.textContent.toLowerCase().includes(q)?'block':'none';
+});
+}
+</script>
+</body>
+</html>
