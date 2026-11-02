@@ -186,5 +186,167 @@ function generateFonts() {
 }
 generateFonts();
 </script>
+
+<section id="pro-fonts">
+  <h2>✨ 500+ English Stylish Fonts</h2>
+  <p>Create Your Own Stylish Name</p>
+
+  <input id="proFontInput" type="text"
+    placeholder="Enter Your Name..."
+    oninput="showProFonts()">
+
+  <input id="proFontSearch" type="text"
+    placeholder="Search font style..."
+    oninput="showProFonts()">
+
+  <div id="proFontCount"></div>
+  <div id="proFontResults"></div>
+</section>
+
+<style>
+#pro-fonts {
+  background:#101827;
+  color:white;
+  padding:20px;
+  border-radius:16px;
+  margin:20px 0;
+  font-family:Arial,sans-serif;
+}
+#pro-fonts h2 {
+  text-align:center;
+  color:#00e6bd;
+}
+#pro-fonts input {
+  width:100%;
+  box-sizing:border-box;
+  padding:14px;
+  margin:8px 0;
+  border:0;
+  border-radius:9px;
+  font-size:16px;
+}
+.pro-font-card {
+  background:#202e43;
+  padding:13px;
+  border-radius:10px;
+  margin:10px 0;
+  overflow-wrap:anywhere;
+}
+.pro-font-card p {
+  font-size:19px;
+  margin:12px 0;
+}
+.pro-font-card button {
+  background:#00d6b0;
+  color:#071b20;
+  border:0;
+  padding:9px 18px;
+  border-radius:8px;
+  font-weight:bold;
+}
+#proFontCount {
+  padding:10px 0;
+  color:#00e6bd;
+}
+</style>
+
+<script>
+const proStyles = [
+ ["Bold",0x1D400,0x1D41A],
+ ["Italic",0x1D434,0x1D44E],
+ ["Bold Italic",0x1D468,0x1D482],
+ ["Sans",0x1D5A0,0x1D5BA],
+ ["Sans Bold",0x1D5D4,0x1D5EE],
+ ["Sans Italic",0x1D608,0x1D622],
+ ["Sans Bold Italic",0x1D63C,0x1D656],
+ ["Monospace",0x1D670,0x1D68A]
+];
+
+const proFrames = [
+ ["꧁","꧂"],["『","』"],["【","】"],
+ ["《","》"],["★","★"],["✦","✦"],
+ ["♛","♛"],["ツ","ツ"],["亗","亗"],
+ ["⚡","⚡"],["♡","♡"],["✿","✿"],
+ ["☯","☯"],["༺","༻"],["彡","彡"],
+ ["乂","乂"],["〆","〆"],["◥","◤"],
+ ["◈","◈"],["✧","✧"],["♕","♕"],
+ ["♔","♔"],["✓","✓"],["➤","➤"],
+ ["•","•"],["×","×"],["☆","☆"],
+ ["♠","♠"],["♣","♣"],["♦","♦"],
+ ["☀","☀"],["☾","☽"],["⚔","⚔"],
+ ["༒","༒"],["░","░"],["▒","▒"],
+ ["▓","▓"],["⫷","⫸"],["⟦","⟧"],
+ ["⟪","⟫"],["⌁","⌁"],["⊰","⊱"],
+ ["⸙","⸙"],["۝","۝"],["♬","♬"],
+ ["ღ","ღ"],["❖","❖"],["✺","✺"],
+ ["✪","✪"],["☘","☘"],["⛧","⛧"],
+ ["♜","♜"],["♝","♝"],["♞","♞"],
+ ["♟","♟"],["⚜","⚜"],["❀","❀"],
+ ["❁","❁"],["❂","❂"],["✵","✵"],
+ ["✶","✶"],["✷","✷"],["✹","✹"],
+ ["♧","♧"],["⛥","⛥"]
+];
+
+function proConvert(str,up,low) {
+ return [...str].map(c=>{
+  const n=c.codePointAt(0);
+  if(n>=65 && n<=90)
+   return String.fromCodePoint(up+n-65);
+  if(n>=97 && n<=122)
+   return String.fromCodePoint(low+n-97);
+  return c;
+ }).join("");
+}
+
+function showProFonts() {
+ const input=document.getElementById("proFontInput").value || "HASSAN";
+ const search=document.getElementById("proFontSearch").value.toLowerCase();
+ const results=document.getElementById("proFontResults");
+ const items=[];
+
+ proStyles.forEach(style=>{
+  const converted=proConvert(input,style[1],style[2]);
+
+  items.push({
+   name:style[0],
+   value:converted
+  });
+
+  proFrames.forEach((frame,i)=>{
+   items.push({
+    name:style[0]+" Decorated "+(i+1),
+    value:frame[0]+converted+frame[1]
+   });
+  });
+ });
+
+ const filtered=items.filter(item=>
+  item.name.toLowerCase().includes(search)
+ );
+
+ document.getElementById("proFontCount").textContent =
+  filtered.length+" Font Styles Available";
+
+ results.innerHTML=filtered.map((item,i)=>`
+  <div class="pro-font-card">
+   <b>${item.name}</b>
+   <p>${item.value}</p>
+   <button onclick="copyProFont(${i})">Copy</button>
+  </div>
+ `).join("");
+
+ window.proVisibleFonts=filtered;
+}
+
+function copyProFont(i) {
+ const value=window.proVisibleFonts[i].value;
+ navigator.clipboard.writeText(value)
+ .then(()=>alert("Font Copied!"))
+ .catch(()=>alert("Copy not supported"));
+}
+
+showProFonts();
+</script>
+
 </body>
 </html>
